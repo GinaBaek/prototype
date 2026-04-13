@@ -895,7 +895,7 @@
             <div class="pagination-inline">
               <div class="pagination-bar active"></div>
               <div class="pagination-bar active"></div>
-              <div class="pagination-bar"></div>
+              <div class="pagination-bar active"></div>
             </div>
             <button class="sheet-nav-btn" onclick="closeAiFlow()"><svg viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
@@ -920,7 +920,7 @@
           </div>
           <div class="swipe-hint">← 패스 &nbsp;&nbsp; 좋아요 →</div>
           <div class="sheet-footer">
-            <button class="btn-primary" onclick="showPage('ai-page-product')">다음</button>
+            <button class="btn-primary" onclick="goToResult()">다음</button>
           </div>
         </div>
 
@@ -1340,15 +1340,19 @@ function startLoading() {
   showPage('ai-page-loading');
 
   setTimeout(() => {
-    document.querySelectorAll('.ai-overlay').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-result').classList.add('active');
-    const scroll = document.getElementById('result-scroll');
-    const btn = document.getElementById('scroll-to-bottom-btn');
-    btn.classList.remove('hidden');
-    scroll.addEventListener('scroll', () => {
-      btn.classList.toggle('hidden', scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 40);
-    });
-  }, 2800);
+    showPage('ai-page-style');
+  }, 3000);
+}
+
+function goToResult() {
+  document.querySelectorAll('.ai-overlay').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-result').classList.add('active');
+  const scroll = document.getElementById('result-scroll');
+  const btn = document.getElementById('scroll-to-bottom-btn');
+  btn.classList.remove('hidden');
+  scroll.addEventListener('scroll', () => {
+    btn.classList.toggle('hidden', scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 40);
+  });
 }
 
 function scrollResultToBottom() {
