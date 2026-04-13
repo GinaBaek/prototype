@@ -423,13 +423,25 @@
     position: absolute; width: 319px; height: 383px;
     background: #e0e0e0; border-radius: 16px; left: 28px; top: 0;
     box-shadow: 0 2px 5px rgba(63,71,77,0.05);
+    overflow: hidden;
+    transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
+                width 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
+                height 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
+                left 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
+                top 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
+                border-radius 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .card-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card-back.animating-to-front {
+    width: 359px; height: 431px; left: 8px; top: 12px; border-radius: 20px;
   }
   .card-front {
     position: absolute; width: 359px; height: 431px;
     border-radius: 20px; left: 8px; top: 12px;
     overflow: hidden; box-shadow: 0 2px 5px rgba(63,71,77,0.05);
-    transition: transform 0.4s ease, opacity 0.4s ease;
+    transition: opacity 0.35s ease;
   }
+  .card-front.fading-out { opacity: 0; }
   .card-front img { width: 100%; height: 100%; object-fit: cover; }
   .card-ai-label {
     position: absolute; bottom: 12px; right: 12px;
@@ -499,7 +511,7 @@
   .btn-next.disabled { background: #ededed; color: #c1c1c1; pointer-events: none; }
 
   /* ── Loading (ai-page) ── */
-  .loading-body { flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 40px; }
+  .loading-body { flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 60px; }
   .loading-spinner-wrap { position: relative; width: 120px; height: 120px; }
   .loading-arc {
     position: absolute; inset: 0;
@@ -907,7 +919,7 @@
             </div>
           </div>
           <div class="cards-container" id="style-cards">
-            <div class="card-back"></div>
+            <div class="card-back" id="card-back"><img id="card-back-img" src="" alt=""></div>
             <div class="card-front" id="style-card-front">
               <img src="https://www.figma.com/api/mcp/asset/fc974053-367d-4704-bbc3-2a691f398315" alt="스타일 이미지"
                 onerror="this.style.background='linear-gradient(135deg,#8B6914,#5D4037)';this.style.display='block';this.removeAttribute('src');">
@@ -919,7 +931,7 @@
             </div>
           </div>
           <div class="sheet-footer">
-            <button class="btn-primary" onclick="goToResult()">다음</button>
+            <button class="btn-primary" onclick="nextStyleCard()">다음</button>
           </div>
         </div>
 
@@ -1344,7 +1356,60 @@ function startLoading() {
 
   setTimeout(() => {
     showPage('ai-page-style');
+    initStyleCards();
   }, 3000);
+}
+
+// ── Style card cycling ──
+const STYLE_IMAGES = [
+  'https://www.figma.com/api/mcp/asset/fc974053-367d-4704-bbc3-2a691f398315',
+  'style-img-2',  // 교체 대기
+  'style-img-3',  // 교체 대기
+  'style-img-4',  // 교체 대기
+];
+let styleCardIdx = 0;
+
+function initStyleCards() {
+  styleCardIdx = 0;
+  const frontImg = document.querySelector('#style-card-front img');
+  if (frontImg) frontImg.src = STYLE_IMAGES[0];
+  preloadBackCard(1);
+}
+
+function preloadBackCard(idx) {
+  const backImg = document.getElementById('card-back-img');
+  if (!backImg || idx >= STYLE_IMAGES.length) return;
+  backImg.src = STYLE_IMAGES[idx];
+}
+
+function nextStyleCard() {
+  styleCardIdx++;
+  if (styleCardIdx >= STYLE_IMAGES.length) {
+    goToResult();
+    return;
+  }
+  const front = document.getElementById('style-card-front');
+  const back  = document.getElementById('card-back');
+
+  // 앞 카드 fade out
+  front.classList.add('fading-out');
+
+  // 뒤 카드를 앞으로 확장
+  void back.offsetHeight;
+  back.classList.add('animating-to-front');
+
+  setTimeout(() => {
+    // 앞 카드 이미지 교체 후 초기화
+    const frontImg = front.querySelector('img');
+    if (frontImg) frontImg.src = STYLE_IMAGES[styleCardIdx];
+    front.classList.remove('fading-out');
+
+    // 뒤 카드 원래 크기로 복귀
+    back.classList.remove('animating-to-front');
+
+    // 다음 카드 미리 로드
+    preloadBackCard(styleCardIdx + 1);
+  }, 450);
 }
 
 function goToResult() {
