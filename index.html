@@ -437,7 +437,7 @@
     text-shadow: 0 2px 7px rgba(63,71,77,0.3);
   }
   .thumbs-on-card {
-    position: absolute; width: 40px; height: 40px;
+    position: absolute; width: 38px; height: 38px;
     background: rgba(0,0,0,0.4); border: 1px solid white;
     border-radius: 999px; display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all 0.2s; z-index: 5;
@@ -499,7 +499,7 @@
   .btn-next.disabled { background: #ededed; color: #c1c1c1; pointer-events: none; }
 
   /* ── Loading (ai-page) ── */
-  .loading-body { flex: 1; display: flex; align-items: center; justify-content: center; }
+  .loading-body { flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 40px; }
   .loading-spinner-wrap { position: relative; width: 120px; height: 120px; }
   .loading-arc {
     position: absolute; inset: 0;
@@ -912,10 +912,10 @@
               <img src="https://www.figma.com/api/mcp/asset/fc974053-367d-4704-bbc3-2a691f398315" alt="스타일 이미지"
                 onerror="this.style.background='linear-gradient(135deg,#8B6914,#5D4037)';this.style.display='block';this.removeAttribute('src');">
               <div class="card-ai-label">AI Generated</div>
-              <div class="thumbs-on-card" style="left:205px;top:295px;" onclick="toggleThumb(this,0)"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg></div>
-              <div class="thumbs-on-card" style="left:139px;top:117px;" onclick="toggleThumb(this,1)"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg></div>
-              <div class="thumbs-on-card" style="left:290px;top:48px;" onclick="toggleThumb(this,2)"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg></div>
-              <div class="thumbs-on-card" style="left:79px;top:259px;" onclick="toggleThumb(this,3)"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg></div>
+              <div class="thumbs-on-card" style="left:205px;top:295px;" onclick="toggleThumb(this,0)"><svg viewBox="0 0 24 24" fill="white"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg></div>
+              <div class="thumbs-on-card" style="left:139px;top:117px;" onclick="toggleThumb(this,1)"><svg viewBox="0 0 24 24" fill="white"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg></div>
+              <div class="thumbs-on-card" style="left:290px;top:48px;" onclick="toggleThumb(this,2)"><svg viewBox="0 0 24 24" fill="white"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg></div>
+              <div class="thumbs-on-card" style="left:79px;top:259px;" onclick="toggleThumb(this,3)"><svg viewBox="0 0 24 24" fill="white"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg></div>
             </div>
           </div>
           <div class="sheet-footer">
