@@ -472,7 +472,7 @@
   .product-grid { padding: 12px 16px 24px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px 8px; row-gap: 16px; }
   .product-item {
     border-radius: 4px; overflow: hidden; cursor: pointer; position: relative;
-    background: #f8f8f8; border: 1px solid #e8e8e8;
+    background: #f8f8f8;
   }
   .product-img-wrap { position: relative; }
   .product-item img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; border-radius: 4px; }
@@ -498,21 +498,24 @@
   .btn-next { flex: 1; height: 44px; border-radius: 8px; background: #00a1ff; border: none; font-size: 16px; font-weight: 600; color: white; cursor: pointer; letter-spacing: -0.3px; font-family: inherit; }
   .btn-next.disabled { background: #ededed; color: #c1c1c1; pointer-events: none; }
 
-  /* ── Loading ── */
-  #screen-loading { background: white; align-items: center; justify-content: center; }
-  .loading-content { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-  .loading-icon { width: 80px; height: 80px; animation: spin 1.5s linear infinite; }
-  @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
-  @keyframes arcSpin { 0%{transform:rotate(-90deg)} 100%{transform:rotate(270deg)} }
-  .loading-title { font-size: 20px; font-weight: 600; color: #141414; letter-spacing: -0.3px; }
-  .loading-dots { display: flex; gap: 6px; margin-top: 4px; }
-  .loading-dots span {
-    width: 6px; height: 6px; background: #00a1ff; border-radius: 50%;
-    animation: bounce 1.2s ease-in-out infinite;
+  /* ── Loading (ai-page) ── */
+  .loading-body { flex: 1; display: flex; align-items: center; justify-content: center; }
+  .loading-spinner-wrap { position: relative; width: 120px; height: 120px; }
+  .loading-arc {
+    position: absolute; inset: 0;
+    animation: arcRotate 1.2s linear infinite;
+    transform-origin: center;
   }
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce { 0%,80%,100%{transform:scale(0.6);opacity:0.4} 40%{transform:scale(1);opacity:1} }
+  @keyframes arcRotate { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+  .loading-sparkle {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .loading-title {
+    font-size: 20px; font-weight: 600; color: #141414;
+    line-height: 28px; letter-spacing: -0.3px;
+    padding: 0 20px; margin-top: 4px;
+  }
 
   /* ── Result ── */
   #screen-result { background: white; flex-direction: column; }
@@ -1065,21 +1068,35 @@
           </div>
         </div>
 
+        <!-- ── PAGE: 로딩 ── -->
+        <div id="ai-page-loading" class="ai-page">
+          <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+          <div class="sheet-nav">
+            <button class="sheet-nav-btn" onclick="showPage('ai-page-product')"><svg viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg></button>
+            <div style="flex:1"></div>
+            <button class="sheet-nav-btn" onclick="closeAiFlow()"><svg viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <p class="loading-title" id="loading-screen-title">선택한 상품으로<br>다양한 거실 스타일을 만들고 있어요</p>
+          <div class="loading-body">
+            <div class="loading-spinner-wrap">
+              <!-- 회전 아크 -->
+              <svg class="loading-arc" viewBox="0 0 120 120" fill="none">
+                <circle cx="60" cy="60" r="50" stroke="#00a1ff" stroke-width="4"
+                  stroke-dasharray="235 79" stroke-linecap="round"
+                  transform="rotate(-90 60 60)"/>
+              </svg>
+              <!-- 스파클 -->
+              <div class="loading-sparkle">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+                  <path d="M26 2Q26 26 50 26Q26 26 26 50Q26 26 2 26Q26 26 26 2Z" fill="#00a1ff"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
       <div class="home-indicator"><div class="home-indicator-line"></div></div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════
-       SCREEN 6: 결과 생성 중
-  ══════════════════════════════════════ -->
-  <div id="screen-loading" class="fullscreen-screen" style="background:white;align-items:center;justify-content:center;">
-    <div class="loading-content">
-      <svg class="loading-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M50 10Q50 50 90 50Q50 50 50 90Q50 50 10 50Q50 50 50 10Z" fill="#29B6F6"/>
-      </svg>
-      <p class="loading-title">AI가 취향을 분석하고 있어요</p>
-      <div class="loading-dots"><span></span><span></span><span></span></div>
     </div>
   </div>
 
@@ -1327,13 +1344,16 @@ function toggleProduct(el, idx) {
 
 // ── Loading ──
 function startLoading() {
-  // 오버레이 모두 닫고 로딩 풀스크린 표시
-  document.querySelectorAll('.ai-overlay').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.fullscreen-screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-loading').classList.add('active');
+  // 로딩 타이틀에 방 이름 반영
+  const title = document.getElementById('loading-screen-title');
+  if (title && selectedRoom) {
+    title.innerHTML = `선택한 상품으로<br>다양한 ${selectedRoom} 스타일을 만들고 있어요`;
+  }
+  // 바텀시트 내 로딩 페이지로 전환
+  showPage('ai-page-loading');
 
   setTimeout(() => {
-    document.getElementById('screen-loading').classList.remove('active');
+    document.querySelectorAll('.ai-overlay').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-result').classList.add('active');
     const scroll = document.getElementById('result-scroll');
     const btn = document.getElementById('scroll-to-bottom-btn');
