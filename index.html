@@ -418,7 +418,7 @@
     border-radius: 99px; background: white;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-  .cards-container { flex: 1; min-height: 0; position: relative; overflow: hidden; }
+  .cards-container { flex: 1; min-height: 0; position: relative; overflow: visible; }
   .card-back {
     position: absolute; width: 319px; height: 383px;
     background: #e0e0e0; border-radius: 16px; left: 28px; top: 0;
@@ -433,11 +433,11 @@
   }
   .card-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .card-back.animating-to-front {
-    width: 359px; height: 431px; left: 8px; top: 12px; border-radius: 20px; z-index: 10;
+    width: 359px; height: 431px; left: 8px; top: 0; border-radius: 20px; z-index: 10;
   }
   .card-front {
     position: absolute; width: 359px; height: 431px;
-    border-radius: 20px; left: 8px; top: 12px;
+    border-radius: 20px; left: 8px; top: 0;
     overflow: hidden; box-shadow: 0 2px 5px rgba(63,71,77,0.05);
     z-index: 5; transition: opacity 0.3s ease;
   }
