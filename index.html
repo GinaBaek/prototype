@@ -442,7 +442,7 @@
     border-radius: 999px; display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all 0.2s; z-index: 5;
   }
-  .thumbs-on-card.liked { background: #00a1ff; border-color: #00a1ff; transform: scale(1.15); }
+  .thumbs-on-card.liked { background: #00a1ff; border-color: white; }
   .thumbs-on-card svg { width: 16px; height: 16px; }
   .swipe-hint { text-align: center; padding: 4px 0; font-size: 12px; color: #8c8c8c; letter-spacing: -0.3px; }
 
@@ -1311,8 +1311,12 @@ function selectRoom(btn) {
 }
 
 // ── Style thumbs ──
+const THUMB_DEFAULT = 'https://www.figma.com/api/mcp/asset/ae0c987e-194c-46f9-b818-810fe9b6a9e2';
+const THUMB_LIKED   = 'https://www.figma.com/api/mcp/asset/8dfe78cd-04ac-4211-9458-3fb402f3f575';
 function toggleThumb(el, idx) {
-  el.classList.toggle('liked');
+  const isLiked = el.classList.toggle('liked');
+  const img = el.querySelector('img');
+  if (img) img.src = isLiked ? THUMB_LIKED : THUMB_DEFAULT;
 }
 
 // ── Product ──
