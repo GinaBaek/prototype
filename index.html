@@ -423,19 +423,19 @@
   /* ── Card B (back card) ── */
   .card-back {
     position: absolute; width: 359px; height: 431px;
-    background: #e0e0e0; border-radius: 20px; left: 8px; top: 12px;
+    background: #e0e0e0; border-radius: 20px; left: 8px; top: 0;
     box-shadow: 0 2px 8px rgba(63,71,77,0.08);
     overflow: hidden; z-index: 1;
     transition: top 0.42s cubic-bezier(0.25,0.46,0.45,0.94);
   }
   .card-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .card-back.coming-forward { top: 0; }
+  .card-back.coming-forward { top: 12px; }
   .card-back.no-transition { transition: none !important; }
 
   /* ── Card A (front card) ── */
   .card-front {
     position: absolute; width: 359px; height: 431px;
-    border-radius: 20px; left: 8px; top: 0;
+    border-radius: 20px; left: 8px; top: 12px;
     overflow: hidden; box-shadow: 0 4px 16px rgba(63,71,77,0.14);
     z-index: 5;
     transition: transform 0.38s cubic-bezier(0.55,0,1,0.45), opacity 0.38s ease;
@@ -447,6 +447,7 @@
   /* ── Thumbs overlay (always on top) ── */
   .thumbs-overlay {
     position: absolute; width: 359px; height: 431px; left: 8px; top: 0;
+    top: 12px;
     z-index: 10; pointer-events: none;
     border-radius: 20px; overflow: hidden;
   }
