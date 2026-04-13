@@ -423,23 +423,23 @@
     position: absolute; width: 319px; height: 383px;
     background: #e0e0e0; border-radius: 16px; left: 28px; top: 0;
     box-shadow: 0 2px 5px rgba(63,71,77,0.05);
-    overflow: hidden;
-    transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
-                width 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
+    overflow: hidden; z-index: 1;
+    transition: width 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
                 height 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
                 left 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
                 top 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
-                border-radius 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+                border-radius 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
+                z-index 0s;
   }
   .card-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .card-back.animating-to-front {
-    width: 359px; height: 431px; left: 8px; top: 12px; border-radius: 20px;
+    width: 359px; height: 431px; left: 8px; top: 12px; border-radius: 20px; z-index: 10;
   }
   .card-front {
     position: absolute; width: 359px; height: 431px;
     border-radius: 20px; left: 8px; top: 12px;
     overflow: hidden; box-shadow: 0 2px 5px rgba(63,71,77,0.05);
-    transition: opacity 0.35s ease;
+    z-index: 5; transition: opacity 0.3s ease;
   }
   .card-front.fading-out { opacity: 0; }
   .card-front img { width: 100%; height: 100%; object-fit: cover; }
@@ -511,7 +511,7 @@
   .btn-next.disabled { background: #ededed; color: #c1c1c1; pointer-events: none; }
 
   /* ── Loading (ai-page) ── */
-  .loading-body { flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 60px; }
+  .loading-body { flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 100px; }
   .loading-spinner-wrap { position: relative; width: 120px; height: 120px; }
   .loading-arc {
     position: absolute; inset: 0;
@@ -1363,53 +1363,54 @@ function startLoading() {
 // ── Style card cycling ──
 const STYLE_IMAGES = [
   'https://www.figma.com/api/mcp/asset/fc974053-367d-4704-bbc3-2a691f398315',
-  'style-img-2',  // 교체 대기
-  'style-img-3',  // 교체 대기
-  'style-img-4',  // 교체 대기
+  'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=360&q=80',
+  'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=360&q=80',
+  'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=360&q=80',
 ];
 let styleCardIdx = 0;
+let styleTransitioning = false;
 
 function initStyleCards() {
   styleCardIdx = 0;
+  styleTransitioning = false;
   const frontImg = document.querySelector('#style-card-front img');
   if (frontImg) frontImg.src = STYLE_IMAGES[0];
-  preloadBackCard(1);
-}
-
-function preloadBackCard(idx) {
   const backImg = document.getElementById('card-back-img');
-  if (!backImg || idx >= STYLE_IMAGES.length) return;
-  backImg.src = STYLE_IMAGES[idx];
+  if (backImg && STYLE_IMAGES[1]) backImg.src = STYLE_IMAGES[1];
 }
 
 function nextStyleCard() {
+  if (styleTransitioning) return;
   styleCardIdx++;
-  if (styleCardIdx >= STYLE_IMAGES.length) {
-    goToResult();
-    return;
-  }
+  if (styleCardIdx >= STYLE_IMAGES.length) { goToResult(); return; }
+
+  styleTransitioning = true;
   const front = document.getElementById('style-card-front');
   const back  = document.getElementById('card-back');
+  const frontImg = front.querySelector('img');
+  const backImg = document.getElementById('card-back-img');
 
-  // 앞 카드 fade out
-  front.classList.add('fading-out');
-
-  // 뒤 카드를 앞으로 확장
-  void back.offsetHeight;
+  // 1. 뒤 카드를 앞으로 확장 (z-index:10으로 front 위로)
   back.classList.add('animating-to-front');
 
+  // 2. 앞 카드 fade out
+  front.classList.add('fading-out');
+
+  // 3. 전환 완료 후 정리
   setTimeout(() => {
-    // 앞 카드 이미지 교체 후 초기화
-    const frontImg = front.querySelector('img');
+    // 앞 카드 이미지를 현재 카드로 교체
     if (frontImg) frontImg.src = STYLE_IMAGES[styleCardIdx];
     front.classList.remove('fading-out');
 
-    // 뒤 카드 원래 크기로 복귀
+    // 뒤 카드 원위치 (z-index 낮아짐)
     back.classList.remove('animating-to-front');
 
     // 다음 카드 미리 로드
-    preloadBackCard(styleCardIdx + 1);
-  }, 450);
+    const nextIdx = styleCardIdx + 1;
+    if (backImg && nextIdx < STYLE_IMAGES.length) backImg.src = STYLE_IMAGES[nextIdx];
+
+    styleTransitioning = false;
+  }, 480);
 }
 
 function goToResult() {
